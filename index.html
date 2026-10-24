@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дуель з фото</title>
+<meta name="description" content="Сфотографуй будь-що — і воно стане бійцем. Прийми виклик на дуель!">
+<meta property="og:title" content="Тебе викликали на дуель!">
+<meta property="og:description" content="Сфотографуй будь-що — і воно стане бійцем. Прийми виклик у грі «Дуель з фото».">
+<meta property="og:image" content="https://marchuk951.github.io/photo-duel/icon.png">
+<meta name="theme-color" content="#14121f">
+<link rel="icon" href="icon.png">
+<style>
+  :root { --bg:#14121f; --card:#23203a; --text:#f5f2ff; --muted:#b8b3cc; --accent:#ffd23f; --chip:#2a2640; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:radial-gradient(circle at 50% 20%, #2a1f4a 0%, var(--bg) 60%); color:var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display:flex; align-items:center; justify-content:center; padding:24px 16px; }
+  main { width:100%; max-width:420px; text-align:center; }
+  img { width:160px; height:160px; border-radius:36px; box-shadow:0 12px 40px rgba(0,0,0,.45); }
+  h1 { font-size:28px; margin:22px 0 8px; }
+  p { color:var(--muted); font-size:16px; line-height:1.45; margin:0 0 18px; }
+  .code { display:inline-block; background:var(--chip); border-radius:999px; padding:8px 18px; font-weight:700; letter-spacing:3px; font-size:20px; margin-bottom:22px; }
+  a.btn { display:block; text-decoration:none; font-weight:700; font-size:18px; border-radius:18px; padding:18px; margin:12px 0; }
+  .primary { background:var(--accent); color:var(--bg); }
+  .secondary { background:var(--card); color:var(--text); }
+  small { display:block; color:var(--muted); margin-top:18px; font-size:13px; line-height:1.4; }
+</style>
+</head>
+<body>
+<main>
+  <img src="icon.png" alt="Дуель з фото">
+  <h1 id="title">Дуель з фото</h1>
+  <p id="lead">Сфотографуй будь-який предмет — тапок, чашку, кота — і він стане бійцем. Бийся з друзями!</p>
+  <div id="code" class="code" hidden></div>
+  <a id="open" class="btn primary" href="#">Відкрити в грі</a>
+  <a id="install" class="btn secondary" href="https://play.google.com/store/apps/details?id=com.mar4uk.photoduel">Встановити гру</a>
+  <small id="hint">Гра для Android. Якщо гра вже встановлена, натисни «Відкрити в грі».</small>
+</main>
+<script>
+  // Код друга з посилання: ?c=ABC123
+  var params = new URLSearchParams(location.search);
+  var code = (params.get("c") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+  var store = "https://play.google.com/store/apps/details?id=com.mar4uk.photoduel";
+  var path = code.length === 6 ? "challenge/" + code : "challenge/";
+  // На Android відкриваємо гру через intent://
+  // Без запасної адреси: якщо гри немає, людина просто лишається на цій сторінці
+  // і бачить кнопку «Встановити гру»
+  var intent = "intent://" + path + "#Intent;scheme=photoduel;package=com.mar4uk.photoduel;end";
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  var open = document.getElementById("open");
+  open.href = isAndroid ? intent : "photoduel://" + path;
+  if (code.length === 6) {
+    document.getElementById("title").textContent = "Тебе викликали на дуель!";
+    document.getElementById("lead").textContent = "Друг кидає тобі виклик у грі «Дуель з фото». Сфотографуй будь-що — і побий його бійця!";
+    var c = document.getElementById("code");
+    c.textContent = code;
+    c.hidden = false;
+    document.getElementById("hint").textContent = "Якщо гра не відкрилася — встанови її, а потім додай друга за кодом " + code + " у вкладці «Друзі».";
+    if (isAndroid) setTimeout(function () { location.href = intent; }, 400);
+  }
+</script>
+</body>
+</html>
