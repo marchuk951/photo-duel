@@ -49,13 +49,39 @@
   var isAndroid = /Android/i.test(navigator.userAgent);
   var open = document.getElementById("open");
   open.href = isAndroid ? intent : "photoduel://" + path;
+  // Мова сторінки: українська для українців, для всіх інших — англійська
+  var uk = /^uk/i.test(navigator.language || "");
+  var T = uk ? {
+    name: "Дуель з фото",
+    lead: "Сфотографуй будь-який предмет — тапок, чашку, кота — і він стане бійцем. Бийся з друзями!",
+    open: "Відкрити в грі", install: "Встановити гру",
+    hint: "Гра для Android. Якщо гра вже встановлена, натисни «Відкрити в грі».",
+    ch_title: "Тебе викликали на дуель!",
+    ch_lead: "Друг кидає тобі виклик у грі «Дуель з фото». Сфотографуй будь-що — і побий його бійця!",
+    ch_hint: "Якщо гра не відкрилася — встанови її, а потім додай друга за кодом {c} у вкладці «Друзі»."
+  } : {
+    name: "Photo Duel",
+    lead: "Snap any object — a slipper, a mug, a cat — and it becomes a fighter. Battle your friends!",
+    open: "Open in the game", install: "Get the game",
+    hint: "An Android game. If it's already installed, tap “Open in the game”.",
+    ch_title: "You've been challenged to a duel!",
+    ch_lead: "A friend challenges you in Photo Duel. Snap anything and beat their fighter!",
+    ch_hint: "If the game didn't open, install it and then add your friend with the code {c} in the “Friends” tab."
+  };
+  document.documentElement.lang = uk ? "uk" : "en";
+  document.title = T.name;
+  document.getElementById("title").textContent = T.name;
+  document.getElementById("lead").textContent = T.lead;
+  open.textContent = T.open;
+  document.getElementById("install").textContent = T.install;
+  document.getElementById("hint").textContent = T.hint;
   if (code.length === 6) {
-    document.getElementById("title").textContent = "Тебе викликали на дуель!";
-    document.getElementById("lead").textContent = "Друг кидає тобі виклик у грі «Дуель з фото». Сфотографуй будь-що — і побий його бійця!";
+    document.getElementById("title").textContent = T.ch_title;
+    document.getElementById("lead").textContent = T.ch_lead;
     var c = document.getElementById("code");
     c.textContent = code;
     c.hidden = false;
-    document.getElementById("hint").textContent = "Якщо гра не відкрилася — встанови її, а потім додай друга за кодом " + code + " у вкладці «Друзі».";
+    document.getElementById("hint").textContent = T.ch_hint.replace("{c}", code);
     if (isAndroid) setTimeout(function () { location.href = intent; }, 400);
   }
 </script>
